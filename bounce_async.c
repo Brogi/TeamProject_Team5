@@ -45,10 +45,10 @@ int main(void)
 	
 	for(i=0; i<COLS; i++)
 	{
-		mvaddstr(row+1, i, "=");
-		mvaddstr(row+2, i, "=");
-		mvaddstr(row+3, i, "=");
-		mvaddstr(row+4, i, "=");
+		mvaddstr(row+3, i, "+");
+		mvaddstr(row+4, i, "+");
+		mvaddstr(row+5, i, "+");
+		mvaddstr(row+6, i, "+");
 	}
 	noecho();
 
@@ -81,7 +81,8 @@ void on_alarm(int signum)
 	signal(SIGALRM, on_alarm);	/* reset, just in case	*/
 	mvaddstr(row, col, BLANK);	/* note mvaddstr()	*/
 	col += dir;			/* move to new column	*/
-	mvaddstr(row, col, MESSAGE);	
+
+	mvaddstr(row, col, "<---X");
 	/* redo message		*/
 	refresh();			/* and show it		*/
 
