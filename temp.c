@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <curses.h>
+
+#define MAX_horizon 30
+#define MAX_vertical 20
+
 //checking player
 //making object -> using random function
 //get signal
@@ -37,6 +41,32 @@ void temp_moving(){
         	refresh();
         	}
 		 }
+}
+
+void field(){
+	int i,j;
+
+	for(i=0;i<MAX_vertical;i++){
+		if(i==0){
+			for(j=0;j<MAX_horizon;j++)
+			addstr("*");
+			continue;
+		}
+
+		move(i,0);
+		addstr("*");
+		move(i,MAX_horizon);
+		addstr("*");
+
+	
+		if(i==MAX_vertical-1){
+			move(i,0);
+			for(j=0;j<MAX_horizon;j++)
+			addstr("*");
+			continue;
+		}
+	}
+
 
 
 
@@ -47,9 +77,10 @@ int main( int argc, char *argv[]){
 
 
 	initscr();
+	field();
 	cbreak();
 	keypad(stdscr, TRUE);
-	addstr("Check line :  ");
+	
 
 	
 	temp_moving();
