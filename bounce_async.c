@@ -10,7 +10,7 @@
 #include <locale.h>
 #include <wchar.h>
 #define	MESSAGE	"XXXXXX"
-#define	BLANK	"      "
+#define	BLANK	"     "
 
 int	row = 13;	/* current row		*/
 int	col = 24;	/* current column	*/
@@ -22,11 +22,11 @@ int	done  = 0;
 void set_cr_noecho_mode(void); 
 int set_ticker(int); 		
 
-char character[5][5] = {{'X','X','X','X','X'}, 
-			{'0','X','X','X','0'},
-			{'0','0','X','0','0'},
-			{'0','X','X','X','0'},
-			{'X','X','X','X','X'}};
+char character1[5] = {'X','X','X','X','X'};
+char character2[5] = {' ','X','X','X',' '};
+char     character3[5] = {' ',' ','X',' ',' '};
+char     character4[5] = {' ','X','X','X',' '};
+char     character5[5] = {'X','X','X','X','X'};
 
 int main(void)
 {	void	on_alarm(int);	/* handler for alarm	*/
@@ -45,10 +45,10 @@ int main(void)
 	
 	for(i=0; i<COLS; i++)
 	{
+		mvaddstr(row+1, i, "+");
+		mvaddstr(row+2, i, "+");
 		mvaddstr(row+3, i, "+");
 		mvaddstr(row+4, i, "+");
-		mvaddstr(row+5, i, "+");
-		mvaddstr(row+6, i, "+");
 	}
 	noecho();
 
@@ -56,9 +56,16 @@ int main(void)
 	enable_kbd_signals();       
 	signal(SIGALRM, on_alarm);  
 	set_ticker(delay);
-	
-	move(row,col);
-	
+	charRow = LINES/2;
+	charCol = 5;
+
+	mvaddstr(charRow-4, charCol, character5);
+	mvaddstr(charRow-3, charCol, character5);
+	mvaddstr(charRow-2, charCol, character5);
+        mvaddstr(charRow-1, charCol, character5);
+	mvaddstr(charRow, charCol, character5);
+
+	keypad(stdscr, TRUE);	
 	while( !done )			  
 		pause();
 	endwin();
@@ -68,12 +75,47 @@ int main(void)
 
 void on_input(int signum)
 {		
-	int 	c = getchar();		/* grab the char */
-
-	if ( c == 'Q' || c == EOF )
-		done = 1;
-	else if ( c == ' ' )
-		dir = -dir;
+	int 	c = getch();		/* grab the char */
+	int i, j;
+	
+	switch(c)
+	{
+		case KEY_UP:
+			for(i=0; i<8; i++)
+			{
+				mvaddstr(charRow-4, charCol, BLANK);
+		        	mvaddstr(charRow-3, charCol, BLANK);
+       				mvaddstr(charRow-2, charCol, BLANK);
+       				mvaddstr(charRow-1, charCol, BLANK);
+        			mvaddstr(charRow, charCol, BLANK);
+				charRow--;
+				mvaddstr(charRow-4, charCol, character5);
+                                mvaddstr(charRow-3, charCol, character5);
+                                mvaddstr(charRow-2, charCol, character5);
+                                mvaddstr(charRow-1, charCol, character5);
+                                mvaddstr(charRow, charCol, character5);
+				sleep(2000);
+			}
+			sleep(20000);
+			for(i=0; i<8; i++)
+                        {
+                                mvaddstr(charRow-4, charCol, BLANK);
+                                mvaddstr(charRow-3, charCol, BLANK);
+                                mvaddstr(charRow-2, charCol, BLANK);
+                                mvaddstr(charRow-1, charCol, BLANK);
+                                mvaddstr(charRow, charCol, BLANK);
+                                charRow++;
+                                mvaddstr(charRow-4, charCol, character5);
+                                mvaddstr(charRow-3, charCol, character5);
+                                mvaddstr(charRow-2, charCol, character5);
+                                mvaddstr(charRow-1, charCol, character5);
+                                mvaddstr(charRow, charCol, character5);
+                                sleep(2000);
+                        }
+			break;
+		case 'Q': case EOF:
+			  done = 1;
+	}
 }
 
 void on_alarm(int signum)
