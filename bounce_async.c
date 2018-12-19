@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <curses.h>
+#include <ncurses.h>
 #include <signal.h>
 #include <fcntl.h>
 #include <string.h>
