@@ -109,7 +109,8 @@ void *cal_score(){
 	mvaddstr(1,COLS - strlen(lt) - strlen(level_string),lt);
 	mvaddstr(1,COLS - strlen(level_string),level_string);
 	mvaddstr(2,COLS - strlen(st) - strlen(score_string),st);
-	mvaddstr(2,COLS - strlen(score_string),score_string);	
+	mvaddstr(2,COLS - strlen(score_string),score_string);
+	move(LINES-1, COLS-1);	
 	while(!done){
 		sleep(1);
 		score_int+= 50;
