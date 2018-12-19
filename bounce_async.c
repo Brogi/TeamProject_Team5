@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <termio.h> 
+#include <pthread.h>
 #include <locale.h>
 #include <wchar.h>
 #define	MESSAGE	"XXXXXX"
@@ -19,6 +20,8 @@ int	charCol = 0;
 int	dir   =  -1;	/* where we are going	*/
 int	delay = 20;	/* how long to wait	*/
 int	done  = 0;
+int level = 1;
+int arrow_exsist = 0;
 void set_cr_noecho_mode(void); 
 int set_ticker(int); 		
 
@@ -32,6 +35,9 @@ int main(void)
 {	void	on_alarm(int);	/* handler for alarm	*/
 	void	on_input(int);	/* handler for keybd    */
 	void	enable_kbd_signals();
+	pthread_t t1,t2;
+	void *hit_check();
+	void *cal_score();
 	int i, j;
 	
 	initscr();	
@@ -62,16 +68,64 @@ int main(void)
 	mvaddstr(charRow-4, charCol, character5);
 	mvaddstr(charRow-3, charCol, character5);
 	mvaddstr(charRow-2, charCol, character5);
-        mvaddstr(charRow-1, charCol, character5);
+    mvaddstr(charRow-1, charCol, character5);
 	mvaddstr(charRow, charCol, character5);
 
-	keypad(stdscr, TRUE);	
+	keypad(stdscr, TRUE);
+
+	pthread_create(&t1,NULL,hit_check,NULL);
+	pthread_create(&t2,NULL,cal_score,NULL);
+	
 	while( !done )			  
 		pause();
+	mvaddstr(LINES/2, COLS/2 - 4,"GAME OVER");
+	set_ticker(0);
+	signal(SIGIO, SIG_IGN);
+	getch();
 	endwin();
 
 	return 0;
 }
+
+void *hit_check(){
+	int i;
+	while(!done){
+		for(i=0;i<5;i++){
+			if(row <= charRow && row >= charRow-4 && col + i >= charCol && col + i <= charCol +4)
+				done = 1;
+		}
+	}
+}
+
+void *cal_score(){
+	int score_int = 0;
+	char st[] = "SCORE : ";
+	char lt[] = "LEVEL : ";
+	char level_string[128] = "1";
+	char score_string[128] = "0";
+
+
+	mvaddstr(1,COLS - strlen(lt) - strlen(level_string),lt);
+	mvaddstr(1,COLS - strlen(level_string),level_string);
+	mvaddstr(2,COLS - strlen(st) - strlen(score_string),st);
+	mvaddstr(2,COLS - strlen(score_string),score_string);	
+	while(!done){
+		sleep(1);
+		score_int+= 50;
+		sprintf(score_string,"%d",score_int);
+		mvaddstr(2,COLS - strlen(st) - strlen(score_string),st);
+		mvaddstr(2,COLS - strlen(score_string),score_string);
+		if(level < 10 && score_int / 500 && !(score_int % 500)){
+			level++;
+			delay-= 2;
+			set_ticker(delay);
+		}
+		sprintf(level_string,"%d",level);
+		mvaddstr(1,COLS - strlen(lt) - strlen(level_string),lt);
+		mvaddstr(1,COLS - strlen(level_string),level_string);
+	}
+}
+
 
 void on_input(int signum)
 {		
@@ -113,7 +167,7 @@ void on_input(int signum)
                                 sleep(2000);
                         }
 			break;
-		case 'Q': case EOF:
+		case 'Q': case EOF: case 'q':
 			  done = 1;
 	}
 }
@@ -123,6 +177,11 @@ void on_alarm(int signum)
 	signal(SIGALRM, on_alarm);	/* reset, just in case	*/
 	mvaddstr(row, col, BLANK);	/* note mvaddstr()	*/
 	col += dir;			/* move to new column	*/
+
+	if(col<0){
+		row = LINES/2;
+		col = COLS - strlen(MESSAGE);
+	}
 
 	mvaddstr(row, col, "<---X");
 	/* redo message		*/
