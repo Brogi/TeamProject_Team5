@@ -84,8 +84,8 @@ void on_alarm(int signum)
 
 	mvaddstr(row, col, "<---X");
 	/* redo message		*/
-	refresh();			/* and show it		*/
-
+	move(LINES-1, COLS-1);
+	refresh();
 	/*
 	 * now handle borders
 	 */
