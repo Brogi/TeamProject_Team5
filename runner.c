@@ -43,7 +43,7 @@ int main(void)
 	
 	initscr();	
 	
-	row = LINES/2;
+	row = LINES-5;
 	col = COLS - strlen(MESSAGE);
 
 	set_cr_noecho_mode(); 
@@ -52,10 +52,10 @@ int main(void)
 	
 	for(i=0; i<COLS; i++)
 	{
-		mvaddstr(row+1, i, "+");
-		mvaddstr(row+2, i, "+");
-		mvaddstr(row+3, i, "+");
-		mvaddstr(row+4, i, "+");
+		mvaddstr(LINES-1, i, "+");
+		mvaddstr(LINES-2, i, "+");
+		mvaddstr(LINES-3, i, "+");
+		mvaddstr(LINES-4, i, "+");
 	}
 	noecho();
 
@@ -63,7 +63,7 @@ int main(void)
 	enable_kbd_signals();       
 	signal(SIGALRM, on_alarm);  
 	set_ticker(delay);
-	charRow = LINES/2;
+	charRow = LINES-5;
 	charCol = 5;
 
 	mvaddstr(charRow-4, charCol, character5);
@@ -186,7 +186,7 @@ void on_alarm(int signum)
 	col += dir;			/* move to new column	*/
 
 	if(col<0){
-		row = LINES/2;
+		row = LINES-5;
 		col = COLS - strlen(MESSAGE);
 	}
 
