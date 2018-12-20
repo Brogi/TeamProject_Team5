@@ -14,8 +14,8 @@
 #include <wchar.h>
 #include <time.h>
 #define	MESSAGE	"XXXXXX"
-#define	BLANK	"     "
-#define BLANK2	"        "
+#define BLANK "     "
+#define BLANK2 "       "
 
 
 int	row = 13;	/* current row		*/
@@ -35,8 +35,9 @@ char character1[5] = {'X','X','X','X','X'};
 char character2[5] = {' ','X','X','X',' '};
 char     character3[5] = {' ',' ','X',' ',' '};
 char     character4[5] = {' ','X','X','X',' '};
-char     character5[5] = {'M','M','M','M','M'};
+char     character5[] = {'M','M','M','M','M', '\0'};
 char character6[7] = {'M','M','M','M','M','M','M'};
+
 
 
 void start(){
@@ -71,7 +72,10 @@ int main(void)
 
 	initscr();	
 	
-	row = LINES-5;
+	if(rand() % 2 == 0)
+		row = LINES-5;
+	else
+		row = LINES - 9;
 	col = COLS - strlen(MESSAGE);
 
 	set_cr_noecho_mode(); 
