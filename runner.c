@@ -36,7 +36,7 @@ char character2[5] = {' ','X','X','X',' '};
 char     character3[5] = {' ',' ','X',' ',' '};
 char     character4[5] = {' ','X','X','X',' '};
 char     character5[5] = {'M','M','M','M','M'};
-char character6[8] = {'M','M','M','M','M','M','M','M'};
+char character6[7] = {'M','M','M','M','M','M','M'};
 
 
 void start(){
@@ -130,7 +130,7 @@ void *hit_check(){
 					done = 1;
 			}
 			else{
-				if(row<= charRow && row >= charRow -2 && col + i >= charCol && col + i <= charCol + 7)
+				if(row<= charRow && row >= charRow -2 && col + i >= charCol && col + i <= charCol + 6)
 					done = 1;
 			}
 		}
