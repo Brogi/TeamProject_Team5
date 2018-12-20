@@ -20,7 +20,7 @@
 
 int	row = 13;	/* current row		*/
 int	col = 24;	/* current column	*/
-int 	charRow = 10;
+int charRow = 10;
 int	charCol = 0;
 int	dir   =  -1;	/* where we are going	*/
 int	delay = 20;	/* how long to wait	*/
@@ -39,12 +39,15 @@ void start()
 {
 	char sys;
 
-	mvaddstr(LINES/3-1,COLS/3,"<--XX           <--------XX");
-	mvaddstr(LINES/3,COLS/3,"<----XX	   War of Arrows. <----XX");
-	mvaddstr(LINES/3+1,COLS/3,"     <------XX");
+	mvaddstr(LINES/3-2,COLS/3,"<--XX           <--------XX");
+	mvaddstr(LINES/3-1,COLS/3,"<----XX	   <----XX");
+	mvaddstr(LINES/3+1,COLS/3,"       # War of Arrows. #      " );
+	mvaddstr(LINES/3+3,COLS/3,"     <------XX");
 
-	mvaddstr(LINES/3+7, COLS/3,"  ===Press Any key to Start===");
-	mvaddstr(LINES/3+9, COLS/3,"  Jump key:Up-direction key");
+	mvaddstr(LINES/3+7, COLS/3,"=== Press Any key to Start ===");
+	mvaddstr(LINES/3+9, COLS/3,"Jump key: Up-direction key");
+	mvaddstr(LINES/3+10, COLS/3,"Down key: Down-direction key");
+	mvaddstr(LINES/3+11, COLS/3,"UnDown key: Down-direction key");
 
 	sys=getch();
 }
