@@ -8,12 +8,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <termio.h> 
+#include <time.h>
 #include <pthread.h>
 #include <locale.h>
 #include <wchar.h>
 #include <time.h>
 #define	MESSAGE	"XXXXXX"
 #define	BLANK	"     "
+#define BLANK2	"        "
 
 
 int	row = 13;	/* current row		*/
@@ -25,6 +27,7 @@ int	delay = 20;	/* how long to wait	*/
 int	done  = 0;
 int level = 1;
 int arrow_exsist = 0;
+int status = 0;
 void set_cr_noecho_mode(void); 
 int set_ticker(int); 		
 
@@ -33,6 +36,7 @@ char character2[5] = {' ','X','X','X',' '};
 char     character3[5] = {' ',' ','X',' ',' '};
 char     character4[5] = {' ','X','X','X',' '};
 char     character5[5] = {'M','M','M','M','M'};
+char character6[8] = {'M','M','M','M','M','M','M','M'};
 
 
 void start(){
@@ -63,6 +67,8 @@ int main(void)
 	void *cal_score();
 	int i, j;
 	
+	srand(time(NULL));
+
 	initscr();	
 	
 	row = LINES-5;
@@ -105,6 +111,7 @@ int main(void)
 	while( !done )			  
 		pause();
 	mvaddstr(LINES/2, COLS/2 - 4,"GAME OVER");
+	move(LINES-1, COLS-1);
 	set_ticker(0);
 	signal(SIGIO, SIG_IGN);
 	
@@ -118,8 +125,14 @@ void *hit_check(){
 	int i;
 	while(!done){
 		for(i=0;i<5;i++){
-			if(row <= charRow && row >= charRow-4 && col + i >= charCol && col + i <= charCol +4)
-				done = 1;
+			if(status != 2){
+				if(row <= charRow && row >= charRow-4 && col + i >= charCol && col + i <= charCol +4)
+					done = 1;
+			}
+			else{
+				if(row<= charRow && row >= charRow -2 && col + i >= charCol && col + i <= charCol + 7)
+					done = 1;
+			}
 		}
 	}
 }
@@ -160,7 +173,6 @@ void on_input(int signum)
 {		
 	int 	c = getch();		/* grab the char */
 	int i, j;
-	static int status = 0;
 
 	switch(c)
 	{
@@ -203,6 +215,36 @@ void on_input(int signum)
                         }
 			status = 0;
 			break;
+		case KEY_DOWN:
+			if(status == 1)
+				break;
+			else if (status == 0){
+					status = 2;
+					mvaddstr(charRow-4, charCol, BLANK);
+                    mvaddstr(charRow-3, charCol, BLANK);
+                    mvaddstr(charRow-2, charCol, BLANK);
+                    mvaddstr(charRow-1, charCol, BLANK);
+                    mvaddstr(charRow, charCol, BLANK);
+
+					mvaddstr(charRow-2, charCol, character6);
+                    mvaddstr(charRow-1, charCol, character6);
+                    mvaddstr(charRow, charCol, character6);
+					move(LINES-1, COLS-1);
+			}
+			else{
+				status = 0;
+				mvaddstr(charRow-2, charCol, BLANK2);
+                mvaddstr(charRow-1, charCol, BLANK2);
+                mvaddstr(charRow, charCol, BLANK2);
+
+				mvaddstr(charRow-4, charCol, character5);
+                mvaddstr(charRow-3, charCol, character5);
+                mvaddstr(charRow-2, charCol, character5);
+                mvaddstr(charRow-1, charCol, character5);
+                mvaddstr(charRow, charCol, character5);
+				move(LINES - 1, COLS - 1);
+			}
+			break;
 		case 'Q': case EOF: case 'q':
 			  done = 1;
 	}
@@ -217,7 +259,10 @@ void on_alarm(int signum)
 	col += dir;			/* move to new column	*/
 
 	if(col<0){
+		if(rand() % 2 == 0)
 		row = LINES-5;
+		else
+		row = LINES - 9;
 		col = COLS - strlen(MESSAGE);
 	}
 		
