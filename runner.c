@@ -34,6 +34,22 @@ char     character3[5] = {' ',' ','X',' ',' '};
 char     character4[5] = {' ','X','X','X',' '};
 char     character5[5] = {'M','M','M','M','M'};
 
+
+void start(){
+	char sys;
+	mvaddstr(LINES/3,COLS/3-1,"           <--------XX");
+	mvaddstr(LINES/3,COLS/3,"War of Arrows. <----XX");
+	mvaddstr(LINES/3,COLS/3+1,"<------XX");
+
+
+	mvaddstr(LINES/3, COLS*2/3,"Press Any key to Start");
+	sys=getch();
+	
+
+
+
+}
+
 int main(void)
 {	void	on_alarm(int);	/* handler for alarm	*/
 	void	on_input(int);	/* handler for keybd    */
@@ -49,6 +65,9 @@ int main(void)
 	col = COLS - strlen(MESSAGE);
 
 	set_cr_noecho_mode(); 
+
+
+	start();
 
 	clear();
 	
@@ -84,6 +103,7 @@ int main(void)
 	mvaddstr(LINES/2, COLS/2 - 4,"GAME OVER");
 	set_ticker(0);
 	signal(SIGIO, SIG_IGN);
+	
 	getch();
 	endwin();
 
@@ -117,6 +137,7 @@ void *cal_score(){
 		sleep(1);
 		score_int+= 50;
 		sprintf(score_string,"%d",score_int);
+	
 		mvaddstr(2,COLS - strlen(st) - strlen(score_string),st);
 		mvaddstr(2,COLS - strlen(score_string),score_string);
 		if(level < 10 && score_int / 500 && !(score_int % 500)){
