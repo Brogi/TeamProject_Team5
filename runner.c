@@ -14,8 +14,8 @@
 #include <wchar.h>
 #include <time.h>
 #define	MESSAGE	"XXXXXX"
-#define	BLANK	"     "
-#define BLANK2	"        "
+#define BLANK "     "
+#define BLANK2 "       "
 
 
 int	row = 13;	/* current row		*/
@@ -28,34 +28,30 @@ int	done  = 0;
 int level = 1;
 int arrow_exsist = 0;
 int status = 0;
+int downstatus = 0;
+char character5[6] = {'M','M','M','M','M','\0'};
+char character6[8] = {'M','M','M','M','M','M','M','\0'};
+
 void set_cr_noecho_mode(void); 
 int set_ticker(int); 		
 
-char     character5[6] = {'M','M','M','M','M','\0'};
-char character6[7] = {'M','M','M','M','M','M','M'};
-
-
-void start(){
+void start()
+{
 	char sys;
-
 
 	mvaddstr(LINES/3-1,COLS/3,"<--XX           <--------XX");
 	mvaddstr(LINES/3,COLS/3,"<----XX	   War of Arrows. <----XX");
 	mvaddstr(LINES/3+1,COLS/3,"     <------XX");
 
-
 	mvaddstr(LINES/3+7, COLS/3,"  ===Press Any key to Start===");
 	mvaddstr(LINES/3+9, COLS/3,"  Jump key:Up-direction key");
 
 	sys=getch();
-	
-
-
-
 }
 
 int main(void)
-{	void	on_alarm(int);	/* handler for alarm	*/
+{	
+	void	on_alarm(int);	/* handler for alarm	*/
 	void	on_input(int);	/* handler for keybd    */
 	void	enable_kbd_signals();
 	pthread_t t1,t2;
@@ -67,15 +63,17 @@ int main(void)
 
 	initscr();	
 	
-	row = LINES-5;
-	col = COLS - strlen(MESSAGE);
-
 	set_cr_noecho_mode(); 
-
 
 	start();
 
 	clear();
+
+	if(rand() % 2 == 0)
+		row = LINES-5;
+	else
+		row = LINES - 9;
+	col = COLS - strlen(MESSAGE);
 	
 	for(i=0; i<COLS; i++)
 	{
@@ -117,16 +115,22 @@ int main(void)
 	return 0;
 }
 
-void *hit_check(){
+void *hit_check()
+{
 	int i;
-	while(!done){
-		for(i=0;i<5;i++){
-			if(status != 2){
-				if(row <= charRow && row >= charRow-4 && col + i >= charCol && col + i <= charCol +4)
+
+	while(!done)
+	{
+		for(i=0;i<5;i++)
+		{
+			if(!downstatus)
+			{
+				if(row <= charRow && row >= charRow - 4 && col + i >= charCol && col + i <= charCol + 5)
 					done = 1;
 			}
-			else{
-				if(row<= charRow && row >= charRow -2 && col + i >= charCol && col + i <= charCol + 6)
+			else
+			{
+				if(row <= charRow && row >= charRow - 2 && col + i >= charCol - 1 && col + i <= charCol + 6)
 					done = 1;
 			}
 		}
@@ -173,74 +177,79 @@ void on_input(int signum)
 	switch(c)
 	{
 		case KEY_UP:
-			if(status)
+			if(status || downstatus)
 				break;
 			status = 1;
 			for(i=0; i<8; i++)
 			{
-				mvaddstr(charRow-4, charCol, BLANK);
-		        	mvaddstr(charRow-3, charCol, BLANK);
-       				mvaddstr(charRow-2, charCol, BLANK);
-       				mvaddstr(charRow-1, charCol, BLANK);
-        			mvaddstr(charRow, charCol, BLANK);
+				mvaddstr(charRow-4, charCol, BLANK); move(LINES-1, COLS-1);
+		        mvaddstr(charRow-3, charCol, BLANK); move(LINES-1, COLS-1);
+       			mvaddstr(charRow-2, charCol, BLANK); move(LINES-1, COLS-1);
+       			mvaddstr(charRow-1, charCol, BLANK); move(LINES-1, COLS-1);
+        		mvaddstr(charRow, charCol, BLANK); move(LINES-1, COLS-1);
 				charRow--;
-				mvaddstr(charRow-4, charCol, character5);
-                                mvaddstr(charRow-3, charCol, character5);
-                                mvaddstr(charRow-2, charCol, character5);
-                                mvaddstr(charRow-1, charCol, character5);
-                                mvaddstr(charRow, charCol, character5);
-				move(LINES-1, COLS-1);
+				mvaddstr(charRow-4, charCol, character5); move(LINES-1, COLS-1);
+                mvaddstr(charRow-3, charCol, character5); move(LINES-1, COLS-1);
+                mvaddstr(charRow-2, charCol, character5); move(LINES-1, COLS-1);
+                mvaddstr(charRow-1, charCol, character5); move(LINES-1, COLS-1);
+                mvaddstr(charRow, charCol, character5); move(LINES-1, COLS-1);
 				sleep(2000);
 			}
-			sleep(20000);
+			sleep(2000);
 			for(i=0; i<8; i++)
-                        {
-                                mvaddstr(charRow-4, charCol, BLANK);
-                                mvaddstr(charRow-3, charCol, BLANK);
-                                mvaddstr(charRow-2, charCol, BLANK);
-                                mvaddstr(charRow-1, charCol, BLANK);
-                                mvaddstr(charRow, charCol, BLANK);
-                                charRow++;
-                                mvaddstr(charRow-4, charCol, character5);
-                                mvaddstr(charRow-3, charCol, character5);
-                                mvaddstr(charRow-2, charCol, character5);
-                                mvaddstr(charRow-1, charCol, character5);
-                                mvaddstr(charRow, charCol, character5);
-				move(LINES-1, COLS-1);
-                                sleep(2000);
-                        }
+            {
+                mvaddstr(charRow-4, charCol, BLANK); move(LINES-1, COLS-1);
+                mvaddstr(charRow-3, charCol, BLANK); move(LINES-1, COLS-1);
+                mvaddstr(charRow-2, charCol, BLANK); move(LINES-1, COLS-1);
+                mvaddstr(charRow-1, charCol, BLANK); move(LINES-1, COLS-1);
+                mvaddstr(charRow, charCol, BLANK); move(LINES-1, COLS-1);
+                charRow++;
+                mvaddstr(charRow-4, charCol, character5); move(LINES-1, COLS-1);
+                mvaddstr(charRow-3, charCol, character5); move(LINES-1, COLS-1);
+                mvaddstr(charRow-2, charCol, character5); move(LINES-1, COLS-1);
+                mvaddstr(charRow-1, charCol, character5); move(LINES-1, COLS-1);
+                mvaddstr(charRow, charCol, character5);	move(LINES-1, COLS-1);
+                sleep(2000);
+            }
 			status = 0;
 			break;
 		case KEY_DOWN:
-			if(status == 1)
+			if(status)
 				break;
-			else if (status == 0){
-					status = 2;
-					mvaddstr(charRow-4, charCol, BLANK);
-                    mvaddstr(charRow-3, charCol, BLANK);
-                    mvaddstr(charRow-2, charCol, BLANK);
-                    mvaddstr(charRow-1, charCol, BLANK);
-                    mvaddstr(charRow, charCol, BLANK);
+			else if (downstatus == 0)
+			{
+				status = 1;
+				mvaddstr(charRow-4, charCol, BLANK); move(LINES-1, COLS-1);
+                mvaddstr(charRow-3, charCol, BLANK); move(LINES-1, COLS-1);
+                mvaddstr(charRow-2, charCol, BLANK); move(LINES-1, COLS-1);
+                mvaddstr(charRow-1, charCol, BLANK); move(LINES-1, COLS-1);
+                mvaddstr(charRow, charCol, BLANK); move(LINES-1, COLS-1);
 
-					mvaddstr(charRow-2, charCol, character6);
-                    mvaddstr(charRow-1, charCol, character6);
-                    mvaddstr(charRow, charCol, character6);
-					move(LINES-1, COLS-1);
-			}
-			else{
+				mvaddstr(charRow-2, charCol-1, character6); move(LINES-1, COLS-1);
+                mvaddstr(charRow-1, charCol-1, character6); move(LINES-1, COLS-1);
+                mvaddstr(charRow, charCol-1, character6); move(LINES-1, COLS-1);
+					
+				downstatus = 1;
 				status = 0;
-				mvaddstr(charRow-2, charCol, BLANK2);
-                mvaddstr(charRow-1, charCol, BLANK2);
-                mvaddstr(charRow, charCol, BLANK2);
+			}
+			else if (downstatus == 1)
+			{
+				status = 1;
+				mvaddstr(charRow-2, charCol-1, BLANK2); move(LINES-1, COLS-1);
+                mvaddstr(charRow-1, charCol-1, BLANK2); move(LINES-1, COLS-1);
+                mvaddstr(charRow, charCol-1, BLANK2); move(LINES-1, COLS-1);
 
-				mvaddstr(charRow-4, charCol, character5);
-                mvaddstr(charRow-3, charCol, character5);
-                mvaddstr(charRow-2, charCol, character5);
-                mvaddstr(charRow-1, charCol, character5);
-                mvaddstr(charRow, charCol, character5);
-				move(LINES - 1, COLS - 1);
+				mvaddstr(charRow-4, charCol, character5); move(LINES-1, COLS-1);
+                mvaddstr(charRow-3, charCol, character5); move(LINES-1, COLS-1);
+                mvaddstr(charRow-2, charCol, character5); move(LINES-1, COLS-1);
+                mvaddstr(charRow-1, charCol, character5); move(LINES-1, COLS-1);
+                mvaddstr(charRow, charCol, character5); move(LINES-1, COLS-1);
+				
+				downstatus = 0;
+				status = 0;
 			}
 			break;
+
 		case 'Q': case EOF: case 'q':
 			  done = 1;
 	}
@@ -251,14 +260,15 @@ void on_alarm(int signum)
 	int num;
 
 	signal(SIGALRM, on_alarm);	/* reset, just in case	*/
-	mvaddstr(row, col, BLANK);	/* note mvaddstr()	*/
+	mvaddstr(row, col, BLANK); move(LINES-1, COLS-1);	/* note mvaddstr()	*/
 	col += dir;			/* move to new column	*/
 
-	if(col<0){
+	if(col<0)
+	{
 		if(rand() % 2 == 0)
-		row = LINES-5;
+			row = LINES-5;
 		else
-		row = LINES - 9;
+			row = LINES - 9;
 		col = COLS - strlen(MESSAGE);
 	}
 		
@@ -266,20 +276,8 @@ void on_alarm(int signum)
 	/* redo message		*/
 	move(LINES-1, COLS-1);
 	refresh();
-	/*
-	 * now handle borders
-	 */
-/*	
-	if ( dir == -1 && col <= 0 )
-		dir = 1;
-	else if ( dir == 1 && col+strlen(MESSAGE) >= COLS )
-		dir = -1;
-*/
 }
 
-/*
- * install a handler, tell kernel who to notify on input, enable signals
- */
 void enable_kbd_signals()
 {
 	int  fd_flags;
