@@ -126,7 +126,7 @@ void *hit_check()
 		{
 			if(!downstatus)
 			{
-				if((row <= charRow) && (row >= charRow - 4) && (col + i >= charCol) && (col + i <= charCol + 5))
+				if((row <= charRow) && (row >= charRow - 4) && (col + i >= charCol + 1) && (col + i <= charCol + 5))
 				{
 					done = 1;
 					break;
@@ -144,7 +144,8 @@ void *hit_check()
 	}
 }
 
-void *cal_score(){
+void *cal_score()
+{
 	int score_int = 0;
 	char st[] = "SCORE : ";
 	char lt[] = "LEVEL : ";
@@ -157,6 +158,7 @@ void *cal_score(){
 	mvaddstr(2,COLS - strlen(st) - strlen(score_string),st);
 	mvaddstr(2,COLS - strlen(score_string),score_string);
 	move(LINES-1, COLS-1);	
+
 	while(!done)
 	{
 		sleep(1);
@@ -179,7 +181,7 @@ void *cal_score(){
 
 void on_input(int signum)
 {		
-	int 	c = getch();		/* grab the char */
+	int c = getch();		/* grab the char */
 	int i, j;
 
 	switch(c)
@@ -221,6 +223,7 @@ void on_input(int signum)
             }
 			status = 0;
 			break;
+
 		case KEY_DOWN:
 			if(status)
 				break;
@@ -269,9 +272,10 @@ void on_alarm(int signum)
 
 	signal(SIGALRM, on_alarm);	/* reset, just in case	*/
 	mvaddstr(row, col, BLANK); move(LINES-1, COLS-1);	/* note mvaddstr()	*/
+
 	col += dir;			/* move to new column	*/
 
-	if(col<0)
+	if(col < 0)
 	{
 		if(rand() % 2 == 0)
 			row = LINES-5;
