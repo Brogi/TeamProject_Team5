@@ -30,7 +30,7 @@ char character1[5] = {'X','X','X','X','X'};
 char character2[5] = {' ','X','X','X',' '};
 char     character3[5] = {' ',' ','X',' ',' '};
 char     character4[5] = {' ','X','X','X',' '};
-char     character5[5] = {'X','X','X','X','X'};
+char     character5[5] = {'M','M','M','M','M'};
 
 int main(void)
 {	void	on_alarm(int);	/* handler for alarm	*/
@@ -154,6 +154,7 @@ void on_input(int signum)
                                 mvaddstr(charRow-2, charCol, character5);
                                 mvaddstr(charRow-1, charCol, character5);
                                 mvaddstr(charRow, charCol, character5);
+				move(LINES-1, COLS-1);
 				sleep(2000);
 			}
 			sleep(20000);
@@ -170,6 +171,7 @@ void on_input(int signum)
                                 mvaddstr(charRow-2, charCol, character5);
                                 mvaddstr(charRow-1, charCol, character5);
                                 mvaddstr(charRow, charCol, character5);
+				move(LINES-1, COLS-1);
                                 sleep(2000);
                         }
 			status = 0;
