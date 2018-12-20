@@ -11,6 +11,7 @@
 #include <pthread.h>
 #include <locale.h>
 #include <wchar.h>
+#include <time.h>
 #define	MESSAGE	"XXXXXX"
 #define	BLANK	"     "
 
@@ -184,6 +185,8 @@ void on_input(int signum)
 
 void on_alarm(int signum)
 {
+	int num;
+
 	signal(SIGALRM, on_alarm);	/* reset, just in case	*/
 	mvaddstr(row, col, BLANK);	/* note mvaddstr()	*/
 	col += dir;			/* move to new column	*/
@@ -192,7 +195,7 @@ void on_alarm(int signum)
 		row = LINES-5;
 		col = COLS - strlen(MESSAGE);
 	}
-
+		
 	mvaddstr(row, col, "<---X");
 	/* redo message		*/
 	move(LINES-1, COLS-1);
