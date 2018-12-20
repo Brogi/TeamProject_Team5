@@ -133,10 +133,14 @@ void on_input(int signum)
 {		
 	int 	c = getch();		/* grab the char */
 	int i, j;
-	
+	static int status = 0;
+
 	switch(c)
 	{
 		case KEY_UP:
+			if(status)
+				break;
+			status = 1;
 			for(i=0; i<8; i++)
 			{
 				mvaddstr(charRow-4, charCol, BLANK);
@@ -168,6 +172,7 @@ void on_input(int signum)
                                 mvaddstr(charRow, charCol, character5);
                                 sleep(2000);
                         }
+			status = 0;
 			break;
 		case 'Q': case EOF: case 'q':
 			  done = 1;
