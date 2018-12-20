@@ -31,11 +31,7 @@ int status = 0;
 void set_cr_noecho_mode(void); 
 int set_ticker(int); 		
 
-char character1[5] = {'X','X','X','X','X'};
-char character2[5] = {' ','X','X','X',' '};
-char     character3[5] = {' ',' ','X',' ',' '};
-char     character4[5] = {' ','X','X','X',' '};
-char     character5[5] = {'M','M','M','M','M'};
+char     character5[6] = {'M','M','M','M','M','\0'};
 char character6[7] = {'M','M','M','M','M','M','M'};
 
 
