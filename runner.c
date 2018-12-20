@@ -14,6 +14,7 @@
 #define	MESSAGE	"XXXXXX"
 #define	BLANK	"     "
 
+
 int	row = 13;	/* current row		*/
 int	col = 24;	/* current column	*/
 int 	charRow = 10;
@@ -52,10 +53,10 @@ int main(void)
 	
 	for(i=0; i<COLS; i++)
 	{
-		mvaddstr(LINES-1, i, "+");
-		mvaddstr(LINES-2, i, "+");
-		mvaddstr(LINES-3, i, "+");
-		mvaddstr(LINES-4, i, "+");
+		mvaddstr(LINES-1, i, "=");
+		mvaddstr(LINES-2, i, "=");
+		mvaddstr(LINES-3, i, "=");
+		mvaddstr(LINES-4, i, "=");
 	}
 	noecho();
 
