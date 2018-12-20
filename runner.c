@@ -36,12 +36,16 @@ char     character5[5] = {'M','M','M','M','M'};
 
 void start(){
 	char sys;
-	mvaddstr(LINES/3,COLS/3-1,"           <--------XX");
-	mvaddstr(LINES/3,COLS/3,"War of Arrows. <----XX");
-	mvaddstr(LINES/3,COLS/3+1,"<------XX");
 
 
-	mvaddstr(LINES/3, COLS*2/3,"Press Any key to Start");
+	mvaddstr(LINES/3-1,COLS/3,"<--XX           <--------XX");
+	mvaddstr(LINES/3,COLS/3,"<----XX	   War of Arrows. <----XX");
+	mvaddstr(LINES/3+1,COLS/3,"     <------XX");
+
+
+	mvaddstr(LINES/3+7, COLS/3,"  ===Press Any key to Start===");
+	mvaddstr(LINES/3+9, COLS/3,"  Jump key:Up-direction key");
+
 	sys=getch();
 	
 
