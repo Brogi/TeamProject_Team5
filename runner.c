@@ -54,7 +54,7 @@ int main(void)
 	void	on_alarm(int);	/* handler for alarm	*/
 	void	on_input(int);	/* handler for keybd    */
 	void	enable_kbd_signals();
-	pthread_t t1,t2;
+	pthread_t t1,t2, t3;
 	void *hit_check();
 	void *cal_score();
 	int i, j;
@@ -101,11 +101,12 @@ int main(void)
 
 	pthread_create(&t1,NULL,hit_check,NULL);
 	pthread_create(&t2,NULL,cal_score,NULL);
-	
+
 	while( !done )			  
 		pause();
-	mvaddstr(LINES/2, COLS/2 - 4,"GAME OVER");
-	move(LINES-1, COLS-1);
+
+	mvaddstr(LINES/2, COLS/2 - 4,"GAME OVER");	move(LINES-1, COLS-1);
+
 	set_ticker(0);
 	signal(SIGIO, SIG_IGN);
 	
@@ -125,13 +126,19 @@ void *hit_check()
 		{
 			if(!downstatus)
 			{
-				if(row <= charRow && row >= charRow - 4 && col + i >= charCol && col + i <= charCol + 5)
+				if((row <= charRow) && (row >= charRow - 4) && (col + i >= charCol) && (col + i <= charCol + 5))
+				{
 					done = 1;
+					break;
+				}
 			}
 			else
 			{
-				if(row <= charRow && row >= charRow - 2 && col + i >= charCol - 1 && col + i <= charCol + 6)
+				if((row <= charRow) && (row >= charRow - 2) && (col + i >= charCol - 1) && (col + i <= charCol + 6))
+				{
 					done = 1;
+					break;
+				}
 			}
 		}
 	}
@@ -150,7 +157,8 @@ void *cal_score(){
 	mvaddstr(2,COLS - strlen(st) - strlen(score_string),st);
 	mvaddstr(2,COLS - strlen(score_string),score_string);
 	move(LINES-1, COLS-1);	
-	while(!done){
+	while(!done)
+	{
 		sleep(1);
 		score_int+= 50;
 		sprintf(score_string,"%d",score_int);
